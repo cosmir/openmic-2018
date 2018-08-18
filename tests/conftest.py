@@ -11,7 +11,7 @@ def data_dir():
 
 @pytest.fixture()
 def audio_file(data_dir):
-    return os.path.join(data_dir, 'audio', '6457__dobroide__sunday-02.mp3')
+    return os.path.join(data_dir, 'audio', '000046_3840.ogg')
 
 
 @pytest.fixture()

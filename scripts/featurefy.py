@@ -18,17 +18,17 @@ namespace.
 '''
 
 import argparse
-import audioop
-import librosa
 import numpy as np
 import os
 import pandas as pd
 import sys
+import soundfile as sf
 import tensorflow as tf
 from tqdm import tqdm
 import warnings
 
 import openmic.audioset as audioset
+import openmic.audioset.util as util
 import openmic.audioset.vggish_input as vggish_input
 import openmic.audioset.vggish_slim as vggish_slim
 import openmic.audioset.vggish_postprocess as vggish_postprocess
@@ -59,14 +59,16 @@ def load_input(filename, strict=False):
     """
     examples = None
     try:
-        y, sr = librosa.load(filename, sr=audioset.SAMPLE_RATE, mono=True)
+        y, sr = sf.read(filename, always_2d=True)
+        # Mono only, `waveform_to_examples` will take care of samplerate
+        y = y.mean(axis=-1)
 
-    except audioop.error as derp:
+    except BaseException as derp:
         warnings.warn("Unable to parse({}), skipping: {}"
                       .format(filename, derp))
     else:
         if len(y) > 0:
-            y = librosa.util.normalize(y)
+            y = util.normalize(y)
             examples = vggish_input.waveform_to_examples(y, sr)
         elif strict:
             raise ValueError("Audio file is empty: {}".format(filename))
