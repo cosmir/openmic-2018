@@ -25,40 +25,30 @@ import sys
 import tensorflow as tf
 from tqdm import tqdm
 
+from openmic.util import filebase
 import openmic.vggish
 
 
-def main(files_in, outpath):
+def main(files_in, outpath, strict=True):
 
-    pproc = openmic.vggish.Postprocessor(openmic.vggish.PCA_PARAMS)
     success = []
     with tf.Graph().as_default(), tf.Session() as sess:
 
-        openmic.vggish.define_vggish_slim(training=False)
-        openmic.vggish.load_vggish_slim_checkpoint(
-            sess, openmic.vggish.MODEL_PARAMS)
-        features_tensor = sess.graph.get_tensor_by_name(
-            openmic.vggish.INPUT_TENSOR_NAME)
-        embedding_tensor = sess.graph.get_tensor_by_name(
-            openmic.vggish.OUTPUT_TENSOR_NAME)
-
         for file_in in tqdm(files_in):
-
             file_out = os.path.join(
                 outpath,
-                os.path.extsep.join([os.path.basename(file_in), 'npz']))
-            input_data = openmic.vggish.soundfile_to_examples(file_in)
+                os.path.extsep.join([filebase(file_in), 'npz']))
 
-            if input_data is not None:
-                [embedding] = sess.run([embedding_tensor],
-                                       feed_dict={features_tensor: input_data})
+            examples = openmic.vggish.soundfile_to_examples(file_in, strict=strict)
+            if examples is not None:
+                time_points, features = openmic.vggish.transform(examples, sess)
+                features_z = openmic.vggish.postprocess(features)
 
-                emb_pca = pproc.postprocess(embedding)
-
-                np.savez(file_out, time=np.arange(len(embedding)),
-                         features=embedding, features_z=emb_pca)
+                np.savez(file_out, time=time_points,
+                         features=features, features_z=features_z)
 
             success.append(os.path.exists(file_out))
+
     return success
 
 
@@ -73,6 +63,8 @@ def process_args(args):
 
     parser.add_argument(dest='output_path', type=str, action='store',
                         help='Path to store output files in NPZ format')
+    parser.add_argument(dest='--strict', type=bool, action='store_true',
+                        help='If given, will fail on any errors')
     return parser.parse_args(args)
 
 
@@ -95,5 +87,5 @@ if __name__ == '__main__':
     else:
         files_in = load_files_in(args.input_list)
 
-    success = all(main(files_in, args.output_path))
+    success = all(main(files_in, args.output_path, args.strict))
     sys.exit(0 if success else 1)

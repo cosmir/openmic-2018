@@ -92,7 +92,7 @@ def wavfile_to_examples(wav_file):
     return waveform_to_examples(samples, sr)
 
 
-def soundfile_to_examples(filename, strict=False):
+def soundfile_to_examples(filename, strict=True):
     """Load a soundfile as TF examples.
 
     Parameters
@@ -101,7 +101,7 @@ def soundfile_to_examples(filename, strict=False):
         Path to an audio file on disk. Librosa / audioread will try their best
         to read whatever format you throw at it.
 
-    strict : bool, default=False
+    strict : bool, default=True
         If True, raise any errors caught on load; otherwise, will return None
         for upstream handling.
 
@@ -123,15 +123,14 @@ def soundfile_to_examples(filename, strict=False):
         examples = waveform_to_examples(normalize(y), sr)
 
     except RuntimeError as derp:
+        warnings.warn('Soundfile is unable to read {}, skipping: {}'
+                      .format(filename, derp))
         if strict:
             raise derp
-        else:
-            warnings.warn("Soundfile is unable to read {}, skipping: {}"
-                          .format(filename, derp))
+
     except ValueError as derp:
+        warnings.warn('Caught an empty audio file ({}).'.format(filename))
         if strict:
             raise derp
-        else:
-            warnings.warn("Caught an empty audio file ({}), skipping."
-                          .format(filename))
+
     return examples
