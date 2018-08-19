@@ -3,8 +3,8 @@ import pytest
 import featurefy
 
 
-def test_featurefy_main(audio_file, tmpdir):
-    success = featurefy.main([audio_file], str(tmpdir))
+def test_featurefy_main(ogg_file, tmpdir):
+    success = featurefy.main([ogg_file], str(tmpdir))
     assert all(success)
 
 

@@ -22,62 +22,13 @@ import numpy as np
 import os
 import pandas as pd
 import sys
-import soundfile as sf
 import tensorflow as tf
 from tqdm import tqdm
-import warnings
 
-import openmic.util as util
 import openmic.vggish
-import openmic.vggish.util as vutil
 import openmic.vggish.inputs
 import openmic.vggish.slim
 import openmic.vggish.postprocess
-
-
-def load_input(filename, strict=False):
-    """Load an input audio file as TF-ready examples.
-
-    Parameters
-    ----------
-    filename : str
-        Path to an audio file on disk. Librosa / audioread will try their best
-        to read whatever format you throw at it.
-
-    strict : bool, default=False
-        If True, raise any errors caught on load; otherwise, will return None
-        for upstream handling.
-
-    Returns
-    -------
-    examples : iterable of tf.Examples, or None on failure
-        Audio examples, or None on failure with strict=False.
-
-    Raises
-    ------
-    audioop.error - Unable to parse audio bitdepth (24bit wavs cough)
-    ValueError - Audio file is empty.
-    """
-    examples = None
-    try:
-        y, sr = sf.read(filename, always_2d=True)
-        # Mono only, `waveform_to_examples` will take care of samplerate
-        y = y.mean(axis=-1)
-
-    except BaseException as derp:
-        warnings.warn("Unable to parse({}), skipping: {}"
-                      .format(filename, derp))
-    else:
-        if len(y) > 0:
-            y = util.normalize(y)
-            examples = openmic.vggish.inputs.waveform_to_examples(y, sr)
-        elif strict:
-            raise ValueError("Audio file is empty: {}".format(filename))
-        else:
-            warnings.warn("Caught an empty audio file ({}), skipping."
-                          .format(filename))
-    finally:
-        return examples
 
 
 def main(files_in, outpath):
@@ -99,7 +50,7 @@ def main(files_in, outpath):
             file_out = os.path.join(
                 outpath,
                 os.path.extsep.join([os.path.basename(file_in), 'npz']))
-            input_data = load_input(file_in)
+            input_data = openmic.vggish.inputs.soundfile_to_examples(file_in)
 
             if input_data is not None:
                 [embedding] = sess.run([embedding_tensor],
