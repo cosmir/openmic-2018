@@ -56,3 +56,8 @@ START_TIME = 'start_time_seconds'
 VIDEO_ID = 'video_id'
 LABELS = 'labels'
 TIME = 'time'
+
+MD5_CHECKSUMS = {
+    'vggish_model.ckpt': 'd1c7011e6366aa34176bb05c705e31a8',
+    'vggish_pca_params.npz': 'c80cae691033abe7c7ecd11ea39fc834'
+}

@@ -17,7 +17,7 @@
 
 import numpy as np
 
-from . import vggish_params
+from . import params
 
 
 class Postprocessor(object):
@@ -40,14 +40,15 @@ class Postprocessor(object):
             pca_params_npz_path: Path to a NumPy-format .npz file that
             contains the PCA parameters used in postprocessing.
         """
-        params = np.load(pca_params_npz_path)
-        self._pca_matrix = params[vggish_params.PCA_EIGEN_VECTORS_NAME]
-        # Load means into a column vector for easier broadcasting later.
-        self._pca_means = params[vggish_params.PCA_MEANS_NAME].reshape(-1, 1)
+        with np.load(pca_params_npz_path) as data:
+            self._pca_matrix = data[params.PCA_EIGEN_VECTORS_NAME]
+            # Load means into a column vector for easier broadcasting later.
+            self._pca_means = data[params.PCA_MEANS_NAME].reshape(-1, 1)
+
         assert self._pca_matrix.shape == (
-            vggish_params.EMBEDDING_SIZE, vggish_params.EMBEDDING_SIZE), (
+            params.EMBEDDING_SIZE, params.EMBEDDING_SIZE), (
                 'Bad PCA matrix shape: %r' % (self._pca_matrix.shape,))
-        assert self._pca_means.shape == (vggish_params.EMBEDDING_SIZE, 1), (
+        assert self._pca_means.shape == (params.EMBEDDING_SIZE, 1), (
             'Bad PCA means shape: %r' % (self._pca_means.shape,))
 
     def postprocess(self, embeddings_batch):
@@ -63,7 +64,7 @@ class Postprocessor(object):
         """
         assert len(embeddings_batch.shape) == 2, (
             'Expected 2-d batch, got %r' % (embeddings_batch.shape,))
-        assert embeddings_batch.shape[1] == vggish_params.EMBEDDING_SIZE, (
+        assert embeddings_batch.shape[1] == params.EMBEDDING_SIZE, (
             'Bad batch shape: %r' % (embeddings_batch.shape,))
 
         # Apply PCA.
@@ -79,13 +80,13 @@ class Postprocessor(object):
         # Quantize by:
         # - clipping to [min, max] range
         clipped_embeddings = np.clip(
-            pca_applied, vggish_params.QUANTIZE_MIN_VAL,
-            vggish_params.QUANTIZE_MAX_VAL)
+            pca_applied, params.QUANTIZE_MIN_VAL,
+            params.QUANTIZE_MAX_VAL)
         # - convert to 8-bit in range [0.0, 255.0]
         quantized_embeddings = (
-            (clipped_embeddings - vggish_params.QUANTIZE_MIN_VAL) *
-            (255.0 / (vggish_params.QUANTIZE_MAX_VAL -
-                      vggish_params.QUANTIZE_MIN_VAL)))
+            (clipped_embeddings - params.QUANTIZE_MIN_VAL) *
+            (255.0 / (params.QUANTIZE_MAX_VAL -
+                      params.QUANTIZE_MIN_VAL)))
         # - cast 8-bit float to uint8
         quantized_embeddings = quantized_embeddings.astype(np.uint8)
 

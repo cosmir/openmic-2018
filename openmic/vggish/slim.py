@@ -31,9 +31,9 @@ https://github.com/tensorflow/models/blob/master/slim/nets/vgg.py
 """
 
 import tensorflow as tf
-from . import vggish_params as params
+from . import params
 
-slim = tf.contrib.slim
+tf_slim = tf.contrib.slim
 
 
 def define_vggish_slim(training=False):
@@ -65,16 +65,16 @@ def define_vggish_slim(training=False):
     # - All activations are ReLU.
     # - All convolutions are 3x3 with stride 1 and SAME padding.
     # - All max-pools are 2x2 with stride 2 and SAME padding.
-    with slim.arg_scope([slim.conv2d, slim.fully_connected],
-                        weights_initializer=tf.truncated_normal_initializer(
-                            stddev=params.INIT_STDDEV),
-                        biases_initializer=tf.zeros_initializer(),
-                        activation_fn=tf.nn.relu,
-                        trainable=training), \
-        slim.arg_scope([slim.conv2d],
-                       kernel_size=[3, 3], stride=1, padding='SAME'), \
-        slim.arg_scope([slim.max_pool2d],
-                       kernel_size=[2, 2], stride=2, padding='SAME'), \
+    with tf_slim.arg_scope([tf_slim.conv2d, tf_slim.fully_connected],
+                           weights_initializer=tf.truncated_normal_initializer(
+                           stddev=params.INIT_STDDEV),
+                           biases_initializer=tf.zeros_initializer(),
+                           activation_fn=tf.nn.relu,
+                           trainable=training), \
+        tf_slim.arg_scope([tf_slim.conv2d],
+                          kernel_size=[3, 3], stride=1, padding='SAME'), \
+        tf_slim.arg_scope([tf_slim.max_pool2d],
+                          kernel_size=[2, 2], stride=2, padding='SAME'), \
             tf.variable_scope('vggish'):
 
         # Input: a batch of 2-D log-mel-spectrogram patches.
@@ -86,20 +86,20 @@ def define_vggish_slim(training=False):
                          [-1, params.NUM_FRAMES, params.NUM_BANDS, 1])
 
         # The VGG stack of alternating convolutions and max-pools.
-        net = slim.conv2d(net, 64, scope='conv1')
-        net = slim.max_pool2d(net, scope='pool1')
-        net = slim.conv2d(net, 128, scope='conv2')
-        net = slim.max_pool2d(net, scope='pool2')
-        net = slim.repeat(net, 2, slim.conv2d, 256, scope='conv3')
-        net = slim.max_pool2d(net, scope='pool3')
-        net = slim.repeat(net, 2, slim.conv2d, 512, scope='conv4')
-        net = slim.max_pool2d(net, scope='pool4')
+        net = tf_slim.conv2d(net, 64, scope='conv1')
+        net = tf_slim.max_pool2d(net, scope='pool1')
+        net = tf_slim.conv2d(net, 128, scope='conv2')
+        net = tf_slim.max_pool2d(net, scope='pool2')
+        net = tf_slim.repeat(net, 2, tf_slim.conv2d, 256, scope='conv3')
+        net = tf_slim.max_pool2d(net, scope='pool3')
+        net = tf_slim.repeat(net, 2, tf_slim.conv2d, 512, scope='conv4')
+        net = tf_slim.max_pool2d(net, scope='pool4')
 
         # Flatten before entering fully-connected layers
-        net = slim.flatten(net)
-        net = slim.repeat(net, 2, slim.fully_connected, 4096, scope='fc1')
+        net = tf_slim.flatten(net)
+        net = tf_slim.repeat(net, 2, tf_slim.fully_connected, 4096, scope='fc1')
         # The embedding layer.
-        net = slim.fully_connected(net, params.EMBEDDING_SIZE, scope='fc2')
+        net = tf_slim.fully_connected(net, params.EMBEDDING_SIZE, scope='fc2')
         return tf.identity(net, name='embedding')
 
 

@@ -105,4 +105,4 @@ venv.bak/
 .DS_Store
 
 # AudioSet Model
-openmic/vggish/.model
+openmic/vggish/__model__

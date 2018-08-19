@@ -27,11 +27,12 @@ import tensorflow as tf
 from tqdm import tqdm
 import warnings
 
-import openmic.audioset as audioset
-import openmic.audioset.util as util
-import openmic.audioset.vggish_input as vggish_input
-import openmic.audioset.vggish_slim as vggish_slim
-import openmic.audioset.vggish_postprocess as vggish_postprocess
+import openmic.util as util
+import openmic.vggish
+import openmic.vggish.util as vutil
+import openmic.vggish.inputs
+import openmic.vggish.slim
+import openmic.vggish.postprocess
 
 
 def load_input(filename, strict=False):
@@ -69,7 +70,7 @@ def load_input(filename, strict=False):
     else:
         if len(y) > 0:
             y = util.normalize(y)
-            examples = vggish_input.waveform_to_examples(y, sr)
+            examples = openmic.vggish.inputs.waveform_to_examples(y, sr)
         elif strict:
             raise ValueError("Audio file is empty: {}".format(filename))
         else:
@@ -81,17 +82,17 @@ def load_input(filename, strict=False):
 
 def main(files_in, outpath):
 
-    pproc = vggish_postprocess.Postprocessor(audioset.PCA_PARAMS)
+    pproc = openmic.vggish.postprocess.Postprocessor(openmic.vggish.PCA_PARAMS)
     success = []
     with tf.Graph().as_default(), tf.Session() as sess:
 
-        vggish_slim.define_vggish_slim(training=False)
-        vggish_slim.load_vggish_slim_checkpoint(
-            sess, audioset.MODEL_PARAMS)
+        openmic.vggish.slim.define_vggish_slim(training=False)
+        openmic.vggish.slim.load_vggish_slim_checkpoint(
+            sess, openmic.vggish.MODEL_PARAMS)
         features_tensor = sess.graph.get_tensor_by_name(
-            audioset.INPUT_TENSOR_NAME)
+            openmic.vggish.INPUT_TENSOR_NAME)
         embedding_tensor = sess.graph.get_tensor_by_name(
-            audioset.OUTPUT_TENSOR_NAME)
+            openmic.vggish.OUTPUT_TENSOR_NAME)
 
         for file_in in tqdm(files_in):
 

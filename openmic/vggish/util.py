@@ -1,24 +1,14 @@
 from joblib import Parallel, delayed
 import numpy as np
-import os
 import pandas as pd
 import tensorflow as tf
 
-from openmic.audioset import AUDIO_EMBEDDING_FEATURE_NAME, LABELS
-from openmic.audioset import START_TIME, TIME, VIDEO_ID
-
-
-def filebase(fname):
-    return os.path.splitext(os.path.basename(fname))[0]
-
-
-def safe_makedirs(dpath):
-    if not os.path.exists(dpath) and dpath:
-        os.makedirs(dpath)
+from .params import AUDIO_EMBEDDING_FEATURE_NAME, LABELS
+from .params import START_TIME, TIME, VIDEO_ID
 
 
 def bytestring_to_record(example):
-    """Convert a serialized tf.SequenceExample to a dict of python/numpy types.
+    """Convert a serialized tf.SequenceExample to Python-friendly objects.
 
     Parameters
     ----------
@@ -79,34 +69,3 @@ def load_tfrecord(fname, n_jobs=1, verbose=0):
     features = np.concatenate([xy[0] for xy in results], axis=0)
     meta = pd.concat([xy[1] for xy in results], axis=0, ignore_index=True)
     return features, meta
-
-
-def tiny(x):
-    '''Return the tiniest value for a given data type.
-
-    Ported from librosa 0.6
-    '''
-    x = np.asarray(x)
-
-    if np.issubdtype(x.dtype, np.floating) or np.issubdtype(x.dtype, np.complexfloating):
-        dtype = x.dtype
-    else:
-        dtype = np.float32
-
-    return np.finfo(dtype).tiny
-
-
-def normalize(S):
-    '''Max-scale an input with some guards against numerical instability.
-
-    Ported from librosa 0.6
-    '''
-    mag = np.abs(S).astype(np.float)
-
-    length = np.max(mag, axis=0, keepdims=True)
-    small_idx = length < tiny(S)
-    Snorm = np.empty_like(S)
-
-    length[small_idx] = 1.0
-    Snorm[:] = S / length
-    return Snorm

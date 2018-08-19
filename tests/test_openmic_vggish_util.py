@@ -1,6 +1,6 @@
 import pytest
 
-import openmic.audioset.util as util
+import openmic.vggish.util as util
 
 
 @pytest.fixture()
@@ -17,19 +17,6 @@ def tf_bytestring():
             b"[|\xffR\x14\x00b\xc6\xff8E\x99\x87\xabN\xe2\x9f\xc0\x86\x00\xce"
             b"\xff\x8cm\x93\xaf^\x88k\x07xp\xff\xe0\xa3\xe5\x00\x86C&,\x84\xba"
             b"\x00\xf1\xfby\xb3k\xcfT\xcd\xc4\x81_n\x83\x94")
-
-
-def test_filebase():
-    assert util.filebase('foo/bar.baz') == 'bar'
-    assert util.filebase('foo/bar.baz.whiz') == 'bar.baz'
-    assert util.filebase('foo/') == ''
-    assert util.filebase('') == ''
-
-
-def test_safe_makedirs(tmpdir):
-    util.safe_makedirs('foo')
-    util.safe_makedirs('foo')
-    util.safe_makedirs('')
 
 
 def test_bytestring_to_record(tf_bytestring):
