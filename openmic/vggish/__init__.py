@@ -4,7 +4,9 @@ import os
 
 from openmic.util import md5_file
 from .params import *
-
+from .inputs import soundfile_to_examples
+from .postprocess import Postprocessor
+from .slim import define_vggish_slim, load_vggish_slim_checkpoint
 
 MODEL_PARAMS = pkg_resources.resource_filename(
     __name__, '__model__/vggish_model.ckpt')

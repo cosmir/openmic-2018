@@ -26,19 +26,16 @@ import tensorflow as tf
 from tqdm import tqdm
 
 import openmic.vggish
-import openmic.vggish.inputs
-import openmic.vggish.slim
-import openmic.vggish.postprocess
 
 
 def main(files_in, outpath):
 
-    pproc = openmic.vggish.postprocess.Postprocessor(openmic.vggish.PCA_PARAMS)
+    pproc = openmic.vggish.Postprocessor(openmic.vggish.PCA_PARAMS)
     success = []
     with tf.Graph().as_default(), tf.Session() as sess:
 
-        openmic.vggish.slim.define_vggish_slim(training=False)
-        openmic.vggish.slim.load_vggish_slim_checkpoint(
+        openmic.vggish.define_vggish_slim(training=False)
+        openmic.vggish.load_vggish_slim_checkpoint(
             sess, openmic.vggish.MODEL_PARAMS)
         features_tensor = sess.graph.get_tensor_by_name(
             openmic.vggish.INPUT_TENSOR_NAME)
@@ -50,7 +47,7 @@ def main(files_in, outpath):
             file_out = os.path.join(
                 outpath,
                 os.path.extsep.join([os.path.basename(file_in), 'npz']))
-            input_data = openmic.vggish.inputs.soundfile_to_examples(file_in)
+            input_data = openmic.vggish.soundfile_to_examples(file_in)
 
             if input_data is not None:
                 [embedding] = sess.run([embedding_tensor],
