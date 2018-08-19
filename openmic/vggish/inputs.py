@@ -18,9 +18,12 @@
 import numpy as np
 import resampy
 from scipy.io import wavfile
+import soundfile as sf
+import warnings
 
 from . import mel_features
 from . import params
+from openmic.util import normalize
 
 
 def waveform_to_examples(data, sample_rate):
@@ -87,3 +90,48 @@ def wavfile_to_examples(wav_file):
         raise ValueError('Bad sample type: %r' % wav_data.dtype)
     samples = wav_data / 32768.0  # Convert to [-1.0, +1.0]
     return waveform_to_examples(samples, sr)
+
+
+def soundfile_to_examples(filename, strict=False):
+    """Load a soundfile as TF examples.
+
+    Parameters
+    ----------
+    filename : str
+        Path to an audio file on disk. Librosa / audioread will try their best
+        to read whatever format you throw at it.
+
+    strict : bool, default=False
+        If True, raise any errors caught on load; otherwise, will return None
+        for upstream handling.
+
+    Returns
+    -------
+    examples : iterable of tf.Examples, or None on failure
+        Audio examples, or None on failure with strict=False.
+
+    Raises
+    ------
+    ValueError - Audio file is empty.
+    RuntimeError - Soundfile is unable to parse the file format.
+    """
+    examples = None
+    try:
+        y, sr = sf.read(filename, always_2d=True)
+        # Mono only, `waveform_to_examples` will take care of samplerate
+        y = y.mean(axis=-1)
+        examples = waveform_to_examples(normalize(y), sr)
+
+    except RuntimeError as derp:
+        if strict:
+            raise derp
+        else:
+            warnings.warn("Soundfile is unable to read {}, skipping: {}"
+                          .format(filename, derp))
+    except ValueError as derp:
+        if strict:
+            raise derp
+        else:
+            warnings.warn("Caught an empty audio file ({}), skipping."
+                          .format(filename))
+    return examples
