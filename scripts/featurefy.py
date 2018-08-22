@@ -29,7 +29,7 @@ from openmic.util import filebase
 import openmic.vggish
 
 
-def main(files_in, outpath, strict=True):
+def main(files_in, outpath):
 
     success = []
     with tf.Graph().as_default(), tf.Session() as sess:
@@ -39,13 +39,16 @@ def main(files_in, outpath, strict=True):
                 outpath,
                 os.path.extsep.join([filebase(file_in), 'npz']))
 
-            examples = openmic.vggish.soundfile_to_examples(file_in, strict=strict)
-            if examples is not None:
+            try:
+                examples = openmic.vggish.soundfile_to_examples(file_in)
+
                 time_points, features = openmic.vggish.transform(examples, sess)
                 features_z = openmic.vggish.postprocess(features)
 
                 np.savez(file_out, time=time_points,
                          features=features, features_z=features_z)
+            except ValueError as derp:
+                pass
 
             success.append(os.path.exists(file_out))
 
@@ -63,8 +66,6 @@ def process_args(args):
 
     parser.add_argument(dest='output_path', type=str, action='store',
                         help='Path to store output files in NPZ format')
-    parser.add_argument(dest='--strict', type=bool, action='store_true',
-                        help='If given, will fail on any errors')
     return parser.parse_args(args)
 
 
@@ -87,5 +88,5 @@ if __name__ == '__main__':
     else:
         files_in = load_files_in(args.input_list)
 
-    success = all(main(files_in, args.output_path, args.strict))
+    success = all(main(files_in, args.output_path))
     sys.exit(0 if success else 1)

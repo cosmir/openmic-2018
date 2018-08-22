@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# coding: utf8
+'''Standalone convenience utilities.'''
+
 import hashlib
 import numpy as np
 import os

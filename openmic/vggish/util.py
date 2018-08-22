@@ -1,3 +1,8 @@
+#!/usr/bin/env python
+# coding: utf8
+'''Convenience utilities for interfacing with the VGGish implementation.
+'''
+
 from joblib import Parallel, delayed
 import numpy as np
 import pandas as pd

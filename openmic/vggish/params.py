@@ -19,7 +19,7 @@ See vggish_slim.py for more information.
 """
 import os
 import pkg_resources
-from openmic.util import md5_file
+from ..util import md5_file
 
 # Architectural constants.
 NUM_FRAMES = 96  # Frames in input mel-spectrogram patch.

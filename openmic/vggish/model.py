@@ -1,7 +1,10 @@
+#!/usr/bin/env python
+# coding: utf8
+'''VGGish transform definitions.'''
 
 import numpy as np
 
-from . import params, MODEL_PARAMS
+from . import params
 
 from .slim import load_vggish_slim_checkpoint, define_vggish_slim
 
@@ -27,7 +30,7 @@ def transform(examples, sess):
         VGGish feature array.
     '''
     define_vggish_slim(training=False)
-    load_vggish_slim_checkpoint(sess, MODEL_PARAMS)
+    load_vggish_slim_checkpoint(sess, params.MODEL_PARAMS)
 
     features_tensor = sess.graph.get_tensor_by_name(params.INPUT_TENSOR_NAME)
     embedding_tensor = sess.graph.get_tensor_by_name(params.OUTPUT_TENSOR_NAME)

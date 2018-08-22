@@ -9,8 +9,5 @@ def test_featurefy_main(ogg_file, tmpdir):
 
 
 def test_featurefy_main_garbage_audio(empty_audio_file, tmpdir):
-    success = featurefy.main([empty_audio_file], str(tmpdir), strict=False)
+    success = featurefy.main([empty_audio_file], str(tmpdir))
     assert not all(success)
-
-    with pytest.raises(ValueError):
-        featurefy.main([empty_audio_file], str(tmpdir), strict=True)
