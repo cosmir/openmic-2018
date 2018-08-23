@@ -34,14 +34,15 @@ setup(
     keywords='openmic audio dataset music vggish',
     license='MIT',
     install_requires=[
-        'pandas>=0.23',
+        'pandas>=0.22',
         'numpy>=1.15',
         'scipy>=1.1',
         'scikit-learn>=0.19.1',
         'tensorflow==1.9',
         'tqdm',
         'resampy',
-        'pysoundfile>=0.9'
+        'pysoundfile>=0.9',
+        'joblib'
     ],
     extras_require={},
     scripts=['scripts/featurefy.py']

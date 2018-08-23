@@ -1,0 +1,38 @@
+language: python
+
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libav-tools
+
+sudo: false
+
+cache:
+  directories:
+  - $HOME/env
+  - audioset_model
+
+notifications:
+  email: false
+
+python:
+    - "2.7"
+    - "3.4"
+    - "3.5"
+    - "3.6"
+
+before_install:
+    - bash ./scripts/download-deps.sh
+    - bash .travis_dependencies.sh
+    - export PATH="$HOME/env/miniconda$TRAVIS_PYTHON_VERSION/bin:$PATH";
+    - hash -r
+    - source activate test-environment
+
+install:
+    - pip install -e .
+
+script:
+    - export PYTHONPATH="./scripts:$PYTHONPATH"
+    - py.test -vs tests --cov=openmic
+
+after_success:
+    - coveralls
