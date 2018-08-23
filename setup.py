@@ -41,7 +41,8 @@ setup(
         'tensorflow==1.9',
         'tqdm',
         'resampy',
-        'pysoundfile>=0.9'
+        'pysoundfile>=0.9',
+        'joblib'
     ],
     extras_require={},
     scripts=['scripts/featurefy.py']
