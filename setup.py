@@ -34,7 +34,7 @@ setup(
     keywords='openmic audio dataset music vggish',
     license='MIT',
     install_requires=[
-        'pandas>=0.23',
+        'pandas>=0.22',
         'numpy>=1.15',
         'scipy>=1.1',
         'scikit-learn>=0.19.1',
