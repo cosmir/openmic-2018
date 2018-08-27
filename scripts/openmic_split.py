@@ -11,7 +11,18 @@ from sklearn.model_selection import StratifiedShuffleSplit
 
 
 def process_args(args):
-    '''Parse arguments from the command line'''
+    '''Parse arguments from the command line
+    
+    Parameters
+    ----------
+    args : list of str
+        Command-line arguments, i.e., sys.argv[1:]
+    
+    Returns
+    -------
+    args_parsed : dict
+        Dictionary of parsed arguments
+    '''
 
     parser = argparse.ArgumentParser(description='Split OpenMIC-2018 data into train and test')
 
@@ -43,6 +54,12 @@ def process_args(args):
 
 def load_label_matrix(metadata_file, label_file):
     '''Load metadata and sparse labels from CSV
+
+    Parameters
+    ----------
+    metadata_file : str
+    label_file : str
+        Paths to CSV files storing the openmic metadata and sparse label assignments
 
     Returns
     -------
@@ -82,6 +99,23 @@ def make_partitions(metadata, labels, seed, num_splits, ratio):
             1a. if no positive associations are found, label it as '_negative'
         2. Use sklearn StratifiedShuffleSplit to make balanced train-test partitions
         3. Save each partition as two index csv files
+
+    Parameters
+    ----------
+    metadata : str
+        Path to metadata CSV file
+
+    labels : str
+        Path to sparse labels CSV file
+
+    seed : None, np.random.RandomState, or int
+        Random seed
+
+    num_splits : int > 0
+        Number of splits to generate
+
+    ratio : float in [0, 1]
+        Fraction of data to separate for training
     '''
     sample_keys, label_matrix = load_label_matrix(metadata, labels)
 
@@ -97,6 +131,9 @@ def make_partitions(metadata, labels, seed, num_splits, ratio):
     for fold, (train_idx, test_idx) in tqdm(enumerate(splitter.split(labels, labels))):
         train_ser = sample_keys[train_idx].sort_values()
         test_ser = sample_keys[test_idx].sort_values()
+        if set(train_ser) & set(test_ser):
+            raise RuntimeError('Train and test indices overlap!')
+
         train_ser.to_csv('split{:02d}_train.csv'.format(fold), index=False)
         test_ser.to_csv('split{:02d}_test.csv'.format(fold), index=False)
 
