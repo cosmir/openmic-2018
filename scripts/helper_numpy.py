@@ -4,12 +4,13 @@
 Example
 -------
 $ cd {repo_root}
-$ ./scripts/helper_numpy.py --csv_file /path/to/sparse-labels.csv
+$ python ./scripts/helper_numpy.py --csv_file /path/to/sparse-labels.csv \
 --vggish_path /path/to/vggish/ --output_file /path/to/output.npz
 
 Any valid output file '*.npz' has to be speficied by the user
 '''
 
+from __future__ import print_function
 import argparse
 import numpy as np
 import os
@@ -24,38 +25,35 @@ def main(csvfile, vggishpath, outfile):
     df = pd.read_csv(csvfile)
     instruments = np.unique(df['instrument'])
     sample_key = np.unique(df['sample_key'])
+    songs_num = len(sample_key)
+    inst_num = len(instruments)
 
     print('Extracting the vggish features...')
-    X = np.empty([20000, 10, 128], dtype=int)
+    X = np.empty([songs_num, 10, 128], dtype=int)
     count = 0
     for sk in sample_key:
         sk_prefix = sk[:3]
-        full_name = vggishpath + sk_prefix + '/' + sk + '.json'
+        full_name = os.path.join(vggishpath, sk_prefix, sk + '.json')
         with open(full_name, 'r') as f:
             X_tmp = json.load(f)
         X[count] = X_tmp['features']
         count += 1
 
     print('Extracting the labels information...')
-    Y_true = 0.5 * np.ones([20000, 20], dtype=float)
-    Y_mask = np.zeros([20000, 20], dtype=bool)
+    Y_true = 0.5 * np.ones([songs_num, inst_num], dtype=float)
+    Y_mask = np.zeros([songs_num, inst_num], dtype=bool)
 
     inst_lab = np.copy(df)
     for inst in inst_lab:
-        x_pos = int(np.arange(20000)[sample_key == inst[0]])
-        y_pos = int(np.arange(20)[instruments == inst[1]])
-        Y_true[x_pos, y_pos] = 0.5 * (inst[2] + 1)  # the conversion is probably temporary
-        # until we get the sparse labels in the right format
+        x_pos = int(np.arange(songs_num)[sample_key == inst[0]])
+        y_pos = int(np.arange(inst_num)[instruments == inst[1]])
+        Y_true[x_pos, y_pos] = inst[2]
         Y_mask[x_pos, y_pos] = 1
 
     print('Saving the NPZ file...')
-    try:
-        np.savez(outfile, X=X, Y_true=Y_true,
-                 Y_mask=Y_mask, sample_key=sample_key)
-
-        success.append(os.path.exists(outfile))
-    except ValueError:
-        pass
+    np.savez(outfile, X=X, Y_true=Y_true,
+             Y_mask=Y_mask, sample_key=sample_key)
+    success.append(os.path.exists(outfile))
 
     print('Done.')
     return success
