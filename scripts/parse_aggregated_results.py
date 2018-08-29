@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # coding: utf8
-'''Script to parse raw annotation results into a sparse label collection.
+'''Script to parse aggregated annotation results into a sparse label collection.
 
 Example
 -------
-$ ./scripts/parse_raw_results.py "path/to/dir/*.csv" sparse-labels.csv
+$ ./scripts/parse_aggregated_results.py "path/to/dir/*.csv" sparse-labels.csv
 
 '''
 from __future__ import print_function
@@ -45,7 +45,7 @@ def main(csv_files, output_filename):
 
 def process_args(args):
 
-    parser = argparse.ArgumentParser(description='Raw annotation results parser')
+    parser = argparse.ArgumentParser(description='Aggregated annotation results parser')
 
     parser.add_argument('csv_pattern', type=str, action='store',
                         help='Glob-style file pattern for picking up CSV files.')
