@@ -8,6 +8,16 @@ $ python ./scripts/helper_numpy.py --csv_file /path/to/sparse-labels.csv \
 --vggish_path /path/to/vggish/ --output_file /path/to/output.npz
 
 Any valid output file '*.npz' has to be speficied by the user
+The produced file contains four keys:
+- X: ndarray, shape=(songs_num, 10, 128), dtype=int8, values in [0, 255]
+It contains the VGGish features for an excerpt
+- Y_true: ndarray, shape=(number of inputs, number of classes), dtype=np.float32, values in [0, 1])
+It contains the relevance of the annotation. 0 means the instrument is
+strongly not present. 1 means that the instrument is strongly present.
+- Y_mask: ndarray, shape=(number of inputs, number of classes), dtype=bool, values in [0, 1]
+It indicates the presence/absence of an annotation.
+- sample_key: nparray, shape=(number of inputs,), dtype=object, values are strings
+It contains the sample key of the song.
 '''
 
 from __future__ import print_function
@@ -43,11 +53,10 @@ def main(csvfile, vggishpath, outfile):
     Y_true = 0.5 * np.ones([songs_num, inst_num], dtype=float)
     Y_mask = np.zeros([songs_num, inst_num], dtype=bool)
 
-    inst_lab = np.copy(df)
-    for inst in inst_lab:
-        x_pos = int(np.arange(songs_num)[sample_key == inst[0]])
-        y_pos = int(np.arange(inst_num)[instruments == inst[1]])
-        Y_true[x_pos, y_pos] = inst[2]
+    for _, row in df.iterrows():
+        x_pos = int(np.arange(songs_num)[sample_key == row.sample_key])
+        y_pos = int(np.arange(inst_num)[instruments == row.instrument])
+        Y_true[x_pos, y_pos] = row.relevance
         Y_mask[x_pos, y_pos] = 1
 
     print('Saving the NPZ file...')
