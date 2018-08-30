@@ -13,11 +13,11 @@ The produced file contains four keys:
 It contains the VGGish features for an excerpt
 - Y_true: ndarray, shape=(number of inputs, number of classes), dtype=np.float32, values in [0, 1])
 It contains the relevance of the annotation. 0 means the instrument is
-strongly not present. 1 means that the instrument is strongly present.
-- Y_mask: ndarray, shape=(number of inputs, number of classes), dtype=bool, values in [0, 1]
-It indicates the presence/absence of an annotation.
+strongly not present. 1 means that the instrument is strongly present
+- Y_mask: ndarray, shape=(number of inputs, number of classes), dtype=bool,
+It indicates the presence/absence of an annotation
 - sample_key: nparray, shape=(number of inputs,), dtype=object, values are strings
-It contains the sample key of the song.
+It contains the sample key of the song
 '''
 
 from __future__ import print_function
