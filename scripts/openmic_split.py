@@ -146,6 +146,11 @@ def check_prob(label_matrix, idx, prob_ratio):
     sub_dist_p = (label_matrix.loc[idx] > 0).sum() / label_matrix.loc[idx].count()
     sub_dist_n = (label_matrix.loc[idx] <= 0).sum() / label_matrix.loc[idx].count()
 
+    # Make sure that for each class Y, we have the following conditions:
+    #   P[Y = 1 | x in sample] >= P[Y = 1] * min_prob   # positive examples are not too unlikely
+    #   P[Y = 1 | x in sample] <= P[Y = 1] * max_prob   # or too likely
+    #   P[Y = 0 | x in sample] >= P[Y = 0] * min_prob   # likewise for negative examples
+    #   P[Y = 0 | x in sample] <= P[Y = 0] * max_prob
     return (np.all(min_prob * all_dist_p.values <= sub_dist_p.values) and
             np.all(sub_dist_p.values <= max_prob * all_dist_p.values) and
             np.all(min_prob * all_dist_n.values <= sub_dist_n.values) and
@@ -202,6 +207,7 @@ def make_partitions(metadata, labels, seed, num_splits, ratio, prob_ratio, dupe_
         train_idx = sample_keys[sample_keys['artist_id'].isin(train_artists)]['sample_key'].sort_values()
         test_idx = sample_keys[sample_keys['artist_id'].isin(test_artists)]['sample_key'].sort_values()
 
+        # Throw an exception if the train and test indices have common elements
         if set(train_idx) & set(test_idx):
             raise RuntimeError('Train and test indices overlap!')
 
