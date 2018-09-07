@@ -11,6 +11,7 @@ from __future__ import print_function
 
 import argparse
 import glob
+import json
 import os
 import pandas as pd
 import sys
@@ -65,10 +66,10 @@ def encrypt_field(values, hashlen=8, retries=5):
                          .format(hashlen))
 
     print('Encrypted {} unique values'.format(len(hashmap)))
-    return list(map(hashmap.get, values))
+    return list(map(hashmap.get, values)), hashmap
 
 
-def main(csv_files, output_filename):
+def main(csv_files, output_filename, hashfile=None):
     records = []
     for csv_file in tqdm.tqdm(csv_files):
         records += pd.read_csv(csv_file).apply(parse_one, axis=1).values.tolist()
@@ -77,9 +78,17 @@ def main(csv_files, output_filename):
     print('Loaded {} records'.format(len(df)))
 
     df.sort_values(by='sample_key', inplace=True)
-    df['worker_id'] = encrypt_field(df.worker_id.values.tolist(), 8)
-    df['channel'] = encrypt_field(df.channel.values.tolist(), 4)
+    worker_ids, worker_hashmap = encrypt_field(df.worker_id.values.tolist(), 8)
+    df['worker_id'] = worker_ids
+    channels, channel_hashmap = encrypt_field(df.channel.values.tolist(), 4)
+    df['channel'] = channels
     df.to_csv(output_filename, columns=OUTPUT_COLUMNS, index=None)
+
+    if hashfile:
+        with open(hashfile, 'w') as fp:
+            json.dump(dict(worker_ids=worker_hashmap,
+                           channels=channel_hashmap), fp)
+
     return os.path.exists(output_filename)
 
 
@@ -91,6 +100,8 @@ def process_args(args):
                         help='Glob-style file pattern for picking up CSV files.')
     parser.add_argument(dest='output_filename', type=str, action='store',
                         help='Output filename for writing the sparse label CSV.')
+    parser.add_argument('--hashfile', type=str, default='',
+                        help='Optional file for writing the hash-mappings to disk.')
     return parser.parse_args(args)
 
 
@@ -99,5 +110,5 @@ if __name__ == '__main__':
 
     csv_files = glob.glob(args.csv_pattern)
 
-    success = main(csv_files, args.output_filename)
+    success = main(csv_files, args.output_filename, args.hashfile)
     sys.exit(0 if success else 1)
