@@ -55,11 +55,14 @@ def encrypt_field(values, hashlen=8, retries=5):
         hashmap = {val: str(uuid.uuid4()).replace('-', '')[:hashlen]
                    for val in list(unique_values)}
 
-        if len(hashmap) == len(unique_values):
+        unique_hashes = set(hashmap.values())
+        if len(unique_hashes) == len(unique_values):
+            # No collisions, we're done here.
             break
 
-    if len(hashmap) != len(unique_values):
-        raise ValueError('hashlen={} has caused collisions.')
+    if len(unique_hashes) != len(unique_values):
+        raise ValueError('hashlen={} has caused collisions, try increasing.'
+                         .format(hashlen))
 
     print('Encrypted {} unique values'.format(len(hashmap)))
     return list(map(hashmap.get, values))
