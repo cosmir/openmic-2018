@@ -33,7 +33,7 @@ if [ ! -d "$src" ]; then
 
         conda install -c conda-forge numpy scipy
 
-        pip install python-coveralls pytest-cov pytest-faulthandler
+        pip install coverage pytest python-coveralls pytest-cov pytest-faulthandler
         source deactivate
     popd
 else
