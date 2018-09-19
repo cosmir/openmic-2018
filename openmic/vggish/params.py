@@ -66,9 +66,9 @@ MD5_CHECKSUMS = {
 }
 
 MODEL_PARAMS = pkg_resources.resource_filename(
-    __name__, '__model__/vggish_model.ckpt')
+    __name__, '_model/vggish_model.ckpt')
 PCA_PARAMS = pkg_resources.resource_filename(
-    __name__, '__model__/vggish_pca_params.npz')
+    __name__, '_model/vggish_pca_params.npz')
 
 for fname in MODEL_PARAMS, PCA_PARAMS:
     if not os.path.exists(fname):

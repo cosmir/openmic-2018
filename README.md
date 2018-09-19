@@ -6,6 +6,27 @@ Tools and tutorials for the OpenMIC-2018 dataset.
 [![Coverage Status](https://coveralls.io/repos/github/cosmir/openmic-2018/badge.svg?branch=master)](https://coveralls.io/github/cosmir/openmic-2018?branch=master)
 
 
+## Installing
+
+To use the provided `openmic` Python library, first clone the repository and change directory into it:
+
+```bash
+$ git clone https://github.com/cosmir/openmic-2018.git
+$ cd ./openmic-2018
+```
+
+Next, you'll want to pull down the VGGish model parameters via the following script.
+
+```bash
+$ ./scripts/download-deps.sh
+```
+
+Finally, you can now install the Python library, e.g. with `pip`:
+
+```bash
+$ pip install .
+```
+
 ## Errata
 
 When initially collecting data, ten audio files were corrupted due to [an issue](https://github.com/mdeff/fma/issues/27) in the source FMA dataset:
