@@ -3,7 +3,7 @@
 MODEL_URL="https://storage.googleapis.com/audioset/vggish_model.ckpt"
 PCA_URL="https://storage.googleapis.com/audioset/vggish_pca_params.npz"
 
-MODEL_DIR=openmic/vggish/__model__
+MODEL_DIR=openmic/vggish/_model
 MODEL_PARAMS=${MODEL_DIR}/vggish_model.ckpt
 PCA_PARAMS=${MODEL_DIR}/vggish_pca_params.npz
 

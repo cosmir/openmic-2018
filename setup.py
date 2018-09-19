@@ -16,8 +16,8 @@ setup(
     url='http://github.com/cosmir/{}'.format(repo_name),
     download_url='http://github.com/cosmir/{}/releases'.format(repo_name),
     packages=find_packages(),
-    package_data={'': ['{}/vggish/__model__/vggish_model.ckpt'.format(package_name),
-                       '{}/vggish/__model__/vggish_pca_params.npz'.format(package_name)]},
+    package_data={'': ['vggish/_model/vggish_model.ckpt',
+                       'vggish/_model/vggish_pca_params.npz']},
     long_description=description,
     classifiers=[
         "License :: OSI Approved :: ?",
