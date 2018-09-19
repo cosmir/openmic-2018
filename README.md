@@ -5,6 +5,14 @@ Tools and tutorials for the OpenMIC-2018 dataset.
 
 [![Coverage Status](https://coveralls.io/repos/github/cosmir/openmic-2018/badge.svg?branch=master)](https://coveralls.io/github/cosmir/openmic-2018?branch=master)
 
+## Overview
+
+This repository contains companion source code for working with the [OpenMIC-2018 dataset](https://zenodo.org/tbd), a collection of audio and crowd-sourced instrument labels produced in a collaboration between [Spotify](https://spotify.com/) and [MARL@NYU](https://steinhardt.nyu.edu/marl/). The cost of annotation was sponsored by Spotify, whose contributions to open-source research can be found online at the [developer site](http://developer.spotify.com/), [engineering blog](https://labs.spotify.com/), and [public GitHub](https://spotify.github.io/).
+
+If you use this dataset, please cite the following work:
+
+> Humphrey, Eric J., Durand, Simon, and McFee, Brian. "OpenMIC-2018: An Open Dataset for Multiple Instrument Recognition." in Proceedings of the 19th International Society for Music Information Retrieval Conference (ISMIR), 2018. [pdf](https://bmcfee.github.io/papers/ismir2018_openmic.pdf)
+
 
 ## Installing
 
