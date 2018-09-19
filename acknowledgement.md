@@ -1,6 +1,6 @@
 # Acknowledgement
 
-The OpenMIC-2018 dataset is brought to you by a collaboration between [Spotify](https://spotify.com/) and [NYU](todo://need-a-link?). Additionally, the cost of annotation was sponsored by Spotify, whose contributions to open-source research can be found online at the [developer site](http://developer.spotify.com/), [engineering blog](https://labs.spotify.com/), and [public GitHub](https://spotify.github.io/).
+The OpenMIC-2018 dataset is brought to you by a collaboration between [Spotify](https://spotify.com/) and [MARL@NYU](https://steinhardt.nyu.edu/marl/). Additionally, the cost of annotation was sponsored by Spotify, whose contributions to open-source research can be found online at the [developer site](http://developer.spotify.com/), [engineering blog](https://labs.spotify.com/), and [public GitHub](https://spotify.github.io/).
 
 If you use this dataset, please cite the following work:
 
