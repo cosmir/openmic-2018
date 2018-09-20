@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # coding: utf8
-'''Script to parse aggregated annotation results into a sparse label collection.
+'''Script to parse aggregated annotation responses into a CSV file of labels.
 
 Example
 -------
-$ ./scripts/parse_aggregated_results.py "path/to/dir/*.csv" sparse-labels.csv
+$ ./scripts/parse_aggregated_responses.py \
+    "path/to/dir/*.csv" \
+    openmic-2018-aggregated-labels.csv
 
 '''
 from __future__ import print_function
