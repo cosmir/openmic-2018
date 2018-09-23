@@ -4,8 +4,10 @@
 Example
 -------
 $ cd {repo_root}
-$ python ./scripts/helper_numpy.py --csv_file /path/to/sparse-labels.csv \
---vggish_path /path/to/vggish/ --output_file /path/to/output.npz
+$ python ./scripts/helper_numpy.py \
+    --csv_file /path/to/openmic-2018-aggregated-labels.csv \
+    --vggish_path /path/to/vggish/ \
+    --output_file /path/to/openmic-2018.npz
 
 Any valid output file '*.npz' has to be speficied by the user
 The produced file contains four keys:
@@ -22,11 +24,11 @@ It contains the sample key of the song
 
 from __future__ import print_function
 import argparse
+import json
 import numpy as np
 import os
 import pandas as pd
 import sys
-import json
 
 
 def main(csvfile, vggishpath, outfile):
