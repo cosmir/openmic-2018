@@ -7,7 +7,7 @@ Tools and tutorials for the OpenMIC-2018 dataset.
 
 ## Overview
 
-This repository contains companion source code for working with the [OpenMIC-2018 dataset](https://zenodo.org/record/1432913#.W6dPeJNKjOR), a collection of audio and crowd-sourced instrument labels produced in a collaboration between [Spotify](https://spotify.com/) and [MARL@NYU](https://steinhardt.nyu.edu/marl/). The cost of annotation was sponsored by Spotify, whose contributions to open-source research can be found online at the [developer site](http://developer.spotify.com/), [engineering blog](https://labs.spotify.com/), and [public GitHub](https://spotify.github.io/).
+This repository contains companion source code for working with the [OpenMIC-2018 dataset](https://zenodo.org/record/1432913#.W6dPeJNKjOR), a collection of audio and crowd-sourced instrument labels produced in a collaboration between [Spotify](https://spotify.com/) and New York Universiy's [MARL](https://steinhardt.nyu.edu/marl/) and [Center for Data Science]([MARL](https://cds.nyu.edu)). The cost of annotation was sponsored by Spotify, whose contributions to open-source research can be found online at the [developer site](http://developer.spotify.com/), [engineering blog](https://labs.spotify.com/), and [public GitHub](https://spotify.github.io/).
 
 If you use this dataset, please cite the following work:
 
