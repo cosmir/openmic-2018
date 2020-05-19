@@ -11,7 +11,7 @@ This repository contains companion source code for working with the [OpenMIC-201
 
 If you use this dataset, please cite the following work:
 
-> Humphrey, Eric J., Durand, Simon, and McFee, Brian. "OpenMIC-2018: An Open Dataset for Multiple Instrument Recognition." in Proceedings of the 19th International Society for Music Information Retrieval Conference (ISMIR), 2018. [pdf](https://bmcfee.github.io/papers/ismir2018_openmic.pdf)
+> Humphrey, Eric J., Durand, Simon, and McFee, Brian. "OpenMIC-2018: An Open Dataset for Multiple Instrument Recognition." in Proceedings of the 19th International Society for Music Information Retrieval Conference (ISMIR), 2018. [pdf](https://zenodo.org/record/1492445#.XsPDCRMzZTY)
 
 
 ## Download the Dataset
@@ -49,7 +49,7 @@ openmic-2018/
     ..
 ```
 
-The `openmic-2018.npz` is a Python-friendly composite of the `vggish` features and the `openmic-2018-aggregated-labels.csv`. An example of how to train and evaluate a model is provided in a [tutorial notebook](http://tbd).
+The `openmic-2018.npz` is a Python-friendly composite of the `vggish` features and the `openmic-2018-aggregated-labels.csv`. An example of how to train and evaluate a model is provided in a [tutorial notebook](https://github.com/cosmir/openmic-2018/blob/master/examples/modeling-baseline.ipynb).
 
 
 ## Installing
