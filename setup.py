@@ -38,7 +38,7 @@ setup(
         'numpy>=1.15',
         'scipy>=1.1',
         'scikit-learn>=0.19.1',
-        'tensorflow==1.9',
+        'tensorflow==2.5.0',
         'tqdm',
         'resampy',
         'pysoundfile>=0.9',
