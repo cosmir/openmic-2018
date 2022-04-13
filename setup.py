@@ -38,10 +38,11 @@ setup(
         'numpy>=1.15',
         'scipy>=1.1',
         'scikit-learn>=0.19.1',
-        'tensorflow==1.9',
+        'tensorflow>=2.0',
+        'tf_slim',
         'tqdm',
         'resampy',
-        'pysoundfile>=0.9',
+        'soundfile>=0.9',
         'joblib'
     ],
     extras_require={},

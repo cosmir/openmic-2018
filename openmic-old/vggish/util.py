@@ -70,7 +70,7 @@ def load_tfrecord(fname, n_jobs=1, verbose=0):
     """
     dfx = delayed(bytestring_to_record)
     pool = Parallel(n_jobs=n_jobs, verbose=verbose)
-    results = pool(dfx(x) for x in tf.compat.v1.python_io.tf_record_iterator(fname))
+    results = pool(dfx(x) for x in tf.python_io.tf_record_iterator(fname))
     features = np.concatenate([xy[0] for xy in results], axis=0)
     meta = pd.concat([xy[1] for xy in results], axis=0, ignore_index=True)
     return features, meta

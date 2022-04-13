@@ -53,7 +53,7 @@ def waveform_to_features(data, sample_rate, compress=True):
 
     examples = waveform_to_examples(data, sample_rate)
 
-    with tf.Graph().as_default(), tf.compat.v1.Session() as sess:
+    with tf.Graph().as_default(), tf.Session() as sess:
         time_points, features = transform(examples, sess)
 
         if compress:
