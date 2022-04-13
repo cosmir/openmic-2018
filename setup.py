@@ -37,7 +37,7 @@ setup(
         'numpy>=1.15',
         'scipy>=1.1',
         'scikit-learn>=0.19.1',
-        'tensorflow>=2.0',
+        'tensorflow>=2.4',
         'tf_slim>=1.1.0',
         'tqdm',
         'resampy',
