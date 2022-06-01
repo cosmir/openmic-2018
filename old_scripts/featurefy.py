@@ -32,7 +32,7 @@ import openmic.vggish
 def main(files_in, outpath):
 
     success = []
-    with tf.Graph().as_default(), tf.compat.v1.Session() as sess:
+    with tf.Graph().as_default(), tf.Session() as sess:
 
         for file_in in tqdm(files_in):
             file_out = os.path.join(

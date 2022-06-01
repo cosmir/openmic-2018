@@ -11,7 +11,7 @@ from openmic.vggish import waveform_to_features
 
 def test_model_transform_soundfile(ogg_file):
     examples = openmic.vggish.inputs.soundfile_to_examples(ogg_file)
-    with tf.Graph().as_default(), tf.compat.v1.Session() as sess:
+    with tf.Graph().as_default(), tf.Session() as sess:
         time_points, features = model.transform(examples, sess)
 
     assert len(time_points) == len(features) > 1
